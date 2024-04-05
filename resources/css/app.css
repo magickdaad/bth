@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.sidebar{
+    width: 180px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #374050;
+    padding: 18px 12px;
+    color: #ffffff;
+}
+
+.sidebar__logo{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.sidebar__nav{
+    padding-left: 21px;
+}

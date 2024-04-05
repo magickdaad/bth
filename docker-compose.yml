@@ -1,0 +1,75 @@
+version: '3'
+services:
+
+    # PHP Service
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: php:8.2
+        container_name: app
+        restart: unless-stopped
+        tty: true
+        environment:
+            SERVICE_NAME: app
+            SERVICE_TAGS: dev
+        working_dir: /var/www
+        volumes:
+            - ~/bth:/var/www
+        networks:
+            - app-network
+
+    # Nginx Service
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ~/bth:/var/www
+            - ./nginx/conf.d:/etc/nginx/conf.d
+        networks:
+            - app-network
+
+    pg:
+        image: postgres:latest
+        container_name: pg
+        volumes:
+            - ./postgres-data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_HOST: pgsql
+            POSTGRES_PASSWORD: 12345
+            POSTGRES_USER: laravelgis
+            POSTGRES_DB: laravelgis
+            PGDATA: /var/lib/postgresql/data
+            POSTGRES_HOST_AUTH_METHOD: trust
+        networks:
+            - app-network
+
+    pgadmin:
+        container_name: pgadmin4_container
+        image: dpage/pgadmin4:7
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: root
+        ports:
+            - "5050:80"
+        volumes:
+            - pgadmin-data:/var/lib/pgadmin
+        networks:
+            - app-network
+
+
+volumes:
+    pgadmin-data:
+
+# Docker Networks
+networks:
+    app-network:
+        driver: bridge

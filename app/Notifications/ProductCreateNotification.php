@@ -7,14 +7,14 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ProductCreate extends Notification
+class ProductCreateNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(private Product $product)
+    public function __construct(private readonly Product $product)
     {
         //
     }

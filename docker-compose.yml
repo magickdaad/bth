@@ -16,8 +16,16 @@ services:
         working_dir: /var/www
         volumes:
             - ~/bth:/var/www
-        networks:
-            - app-network
+
+    # Worker Service
+    worker:
+        build: .
+        container_name: worker
+        command: /var/www/artisan queue:work --queue=emails --sleep=3 --tries=3
+        restart: unless-stopped
+        volumes:
+            - ~/bth:/var/www
+
 
     # Nginx Service
     webserver:
@@ -31,9 +39,8 @@ services:
         volumes:
             - ~/bth:/var/www
             - ./nginx/conf.d:/etc/nginx/conf.d
-        networks:
-            - app-network
 
+    # PG Service
     pg:
         image: postgres:latest
         container_name: pg
@@ -41,6 +48,8 @@ services:
             - ./postgres-data:/var/lib/postgresql/data
         ports:
             - "5432:5432"
+
+        restart: unless-stopped
         environment:
             POSTGRES_HOST: pgsql
             POSTGRES_PASSWORD: 12345
@@ -48,9 +57,8 @@ services:
             POSTGRES_DB: laravelgis
             PGDATA: /var/lib/postgresql/data
             POSTGRES_HOST_AUTH_METHOD: trust
-        networks:
-            - app-network
 
+    # PGADMIN Service
     pgadmin:
         container_name: pgadmin4_container
         image: dpage/pgadmin4:7
@@ -62,14 +70,8 @@ services:
             - "5050:80"
         volumes:
             - pgadmin-data:/var/lib/pgadmin
-        networks:
-            - app-network
 
 
 volumes:
     pgadmin-data:
 
-# Docker Networks
-networks:
-    app-network:
-        driver: bridge

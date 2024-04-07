@@ -25,11 +25,14 @@ class ProductUpdateRequest extends FormRequest
         return [
             'article' => [
                 'required',
+                'string',
+                'regex:/^[A-Za-z0-9]+$/i',
                 'max:255',
                 Rule::unique('products', 'article')->ignore($this->route('product'))
             ],
-            'name' => 'required|max:255',
+            'name' => 'required|string|min:10|max:255',
             'status' => 'required|max:255',
+            'data' => 'array'
         ];
     }
 }

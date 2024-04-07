@@ -22,8 +22,8 @@
                         </td>
                     @else
                         <td class="py-[19px]">
-                            @foreach($product->data as $name => $value)
-                                <p>{{$name}}: {{$value}}</p>
+                            @foreach($product->data as $attribute)
+                                <p>{{$attribute['name']}}: {{$attribute['value']}}</p>
                             @endforeach
                         </td>
                     @endif

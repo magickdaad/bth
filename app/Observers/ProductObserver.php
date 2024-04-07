@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Jobs\CreateProduct;
+use App\Jobs\SendEmail;
 use App\Models\Product;
 
 class ProductObserver
@@ -10,7 +10,7 @@ class ProductObserver
 
     public function created(Product $product): void
     {
-        CreateProduct::dispatch($product)->onQueue('emails');
+        SendEmail::dispatch($product)->onQueue('emails');
     }
 
 }

@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Product;
-use App\Notifications\ProductCreate;
+use App\Notifications\ProductCreateNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Notification;
 
-class CreateProduct implements ShouldQueue
+class SendEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -19,7 +19,7 @@ class CreateProduct implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        private Product $product
+        private readonly Product $product
     ) {
     }
 
@@ -28,6 +28,6 @@ class CreateProduct implements ShouldQueue
      */
     public function handle(): void
     {
-        Notification::route('mail', config('products.email'))->notify(new ProductCreate($this->product));
+        Notification::route('mail', config('products.email'))->notify(new ProductCreateNotification($this->product));
     }
 }

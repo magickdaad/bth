@@ -1,20 +1,20 @@
 const addButton = document.querySelector('.attributes__add');
 const attributesContainer = document.querySelector('.attributes__content');
 const attributes__item = document.querySelectorAll('.attributes__item');
-console.log(attributes__item.length)
-let counterAttribute = attributes__item.length == 0 ? 0 : attributes__item.length;
-const addAtribute = () => {
+const deleteButtons = document.querySelectorAll('.attributes__delete');
+let counterAttribute = attributes__item.length === 0 ? 0 : attributes__item.length;
+const addAttribute = () => {
     attributesContainer.insertAdjacentHTML("afterend", "<div class=\"attributes__item flex gap-x-[10px]\">\n" +
         "                        <div class=\"mr-2\">\n" +
         `                            <label for=\"attribute-name-${counterAttribute}\" class=\"block text-sm font-medium leading-6 text-white\">Название</label>\n` +
         "                            <div class=\"mt-2\">\n" +
-        `                               <input type=\"text\" name=\"data[name][]\" id=\"attribute-name-${counterAttribute}\" class=\"block w-[220px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6\">\n` +
+        `                               <input type=\"text\" name=\"data[${counterAttribute}][name]\" id=\"attribute-name-${counterAttribute}\" class=\"block w-[220px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6\">\n` +
         "                            </div>\n" +
         "                        </div>\n" +
         "                        <div class=\"\">\n" +
         `                            <label for=\"attribute-value-${counterAttribute}\" class=\"block text-sm font-medium leading-6 text-white\">Значение</label>\n` +
         "                            <div class=\"mt-2\">\n" +
-        `                                <input type=\"text\" name=\"data[value][]\" id=\"attribute-value-${counterAttribute}\" class=\"block w-[220px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6\">\n` +
+        `                                <input type=\"text\" name=\"data[${counterAttribute}][value]\" id=\"attribute-value-${counterAttribute}\" class=\"block w-[220px] rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6\">\n` +
         "                            </div>\n" +
         "                        </div>\n" +
         `                        <div id="attribute-delete-${counterAttribute}" class=\"attributes__delete self-end cursor-pointer relative z-50\">\n` +
@@ -26,15 +26,16 @@ const addAtribute = () => {
         "                    </div>")
 
     const deleteButton = document.getElementById(`attribute-delete-${counterAttribute}`);
-    deleteButton.addEventListener('click', (evt) => {
-        const parentElement = evt.target.closest(`.attributes__item`);
-        parentElement.remove();
-    });
+    deleteButton.addEventListener('click', deleteAttribute);
     counterAttribute++;
 }
-
 const deleteAttribute = (evt) => {
-    console.log(evt.target)
+    const parentElement = evt.target.closest(`.attributes__item`);
+    parentElement.remove();
 }
 
-addButton.addEventListener('click', addAtribute)
+
+deleteButtons.forEach(button => button.addEventListener('click', deleteAttribute))
+
+
+addButton.addEventListener('click', addAttribute)

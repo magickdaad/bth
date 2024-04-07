@@ -24,8 +24,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     libonig-dev \
-    libzip-dev \
-    supervisor
+    libzip-dev
 
 
 # Очищаем кэш
@@ -33,18 +32,19 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем расширения PHP
 RUN docker-php-ext-install pgsql pdo_pgsql mbstring zip exif pcntl
-RUN docker-php-ext-install sockets
 
 
 # Загружаем актуальную версию Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getc , при создании нового продуктаomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
 
 
 # Создаём пользователя и группу www для приложения Laravel
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
+
 
 # Копируем содержимое текущего каталога в рабочую директорию
 COPY . /var/www

@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('dashboard', ['products' => Product::all()]);
+        return view('product.index', ['products' => Product::available()->get()]);
     }
 
     /**
@@ -69,8 +69,9 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product): RedirectResponse
     {
-        //
+        $product->delete();
+        return redirect()->route('products.index');
     }
 }

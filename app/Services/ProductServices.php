@@ -13,22 +13,19 @@ class ProductServices
 {
     public function storeProduct(ProductStoreRequest $request): RedirectResponse
     {
-        $product = $request->validated();
-        $product['data'] = $request->input('data') !== null
-            ? $this->sortData($request->input('data'))
-            : null;
-        Product::create($product);
+        Product::create($request->validated());
         return redirect('products');
     }
 
 
     public function updateProduct(Product $product, ProductUpdateRequest $request): RedirectResponse|View
     {
-        !$this->checkPermission() ?
-            $product->update(
-                $request->safe()->merge(['data' => $this->sortData($request->input('data'))])->except(['article'])
-            ) :
-            $product->update($request->validated()->merge(['data' => $this->sortData($request->input('data'))]));
+        $productData = $this->checkPermission()
+            ? $request->validated()
+            : $request->safe()->except(['article']);
+
+        $product->update($productData);
+
         return redirect()->route('products.show', $product->id);
     }
 
@@ -38,14 +35,4 @@ class ProductServices
         return in_array(Auth::user()->id, $role['admin']);
     }
 
-    private function sortData(array $data): array
-    {
-        $sortData = [];
-        foreach ($data['name'] as $name) {
-            foreach ($data['value'] as $value) {
-                $sortData[$name] = $value;
-            }
-        }
-        return $sortData;
-    }
 }
